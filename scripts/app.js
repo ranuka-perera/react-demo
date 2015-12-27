@@ -23,9 +23,27 @@ var Cropper = React.createClass({
 });
 
 var MainPage = React.createClass({
+    // Return the image array.
+    parseData: function (json_data) {
+
+    },
+    getInitialState: function () {
+        return {images: []};
+    },
     componentDidMount: function () {
         // When Component loads
-        return;
+        $.ajax(
+            {
+                url: this.props.url,
+                crossDomain: true,
+                dataType: 'jsonp',
+                jsonp: 'jsoncallback',
+                type: 'GET',
+                success: function (data) {
+                    this.setState({images: this.parseData(data)});
+                }.bind(this)
+            }
+        );
     },
     render: function () {
         return (
