@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React Example</title>
+    <link rel="stylesheet" href="assets/cropper/dist/cropper.min.css" />
+    <!-- No point loading js as async because without react, there is nothing to see in the page. -->
+    <script src="assets/react/react.js"></script>
+    <script src="assets/react/react-dom.js"></script>
+      <!-- couldn't find bower package, so using hosted version -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+    <script src="assets/jquery/dist/jquery.min.js"></script>
+    <script src="assets/cropper/dist/cropper.min.js"></script>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/babel" src="scripts/app.js"></script>
+  </body>
+</html>
