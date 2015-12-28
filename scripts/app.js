@@ -1,39 +1,12 @@
 var ThumbImage = React.createClass({
-    generateThumbnail: function (url, dimensions, targetWidth, callback) {
-        // Based on https://stackoverflow.com/a/7557690 & https://stackoverflow.com/a/6005211
-        var canvas = document.createElement("canvas");
-        var img = $('img[src="'+url+'"]')[0];
-
-        var tempScale = targetWidth / dimensions.width;
-
-        canvas.width = dimensions.width * tempScale;
-        canvas.height = dimensions.height * tempScale;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        var thumbUrl = canvas.toDataURL("image/png");
-        if (callback) {
-            callback(thumbUrl);
-        }
-    },
-    recreateThumb: function(e) {
-        if (this.state.initialRender) {
-            this.generateThumbnail(this.props.url, this.props.dimensions, 300, function (thumbUrl) {
-                this.setState({url: thumbUrl});
-                this.setState({initialRender: false});
-            });
-        }
-    },
-    getInitialState: function () {
-        return {url: '', initialRender: true};
-    },
-    componentDidMount: function () {
-        this.setState({url: this.props.url});
+    clickImage: function () {
+        this.props.updateCropper(this.props.url);
     },
     render: function () {
         var returnval = (
             <li className="thumb">
-                <img src={this.state.url} alt={this.props.altText} className="thumb-image"
-                     onLoad={this.recreateThumb}/>
+                <img src={this.props.url} alt={this.props.altText} className="thumb-image"
+                     onClick={this.clickImage}/>
             </li>
         );
         return returnval;
@@ -43,10 +16,11 @@ var ThumbImage = React.createClass({
 var ThumbList = React.createClass({
     render: function () {
         var count = 0;
+        var clickHandler = this.props.updateCropper;
         var thumbs = this.props.images.map(function (image) {
             count += 1;
             return (
-                <ThumbImage url={image.url} altText={image.title} dimensions={image.dimensions} key={count}/>
+                <ThumbImage url={image.url} altText={image.title} key={count} updateCropper={clickHandler}/>
             );
         });
         return (
@@ -71,18 +45,21 @@ var Cropper = React.createClass({
 });
 
 var MainPage = React.createClass({
+    updateCropper: function (imageUrl) {
+        this.setState(imageUrl);
+    },
     // Return the image array.
     parseData: function (jsonData) {
         var images = [];
         jsonData.forEach(function (item) {
             if (item.mime_type === 'image/jpeg' || item.mime_type === 'image/png') {
-                images.push({url: item.path, title: item.title, dimensions: {width: item.width, height: item.height}});
+                images.push({url: item.path, title: item.title});
             }
         });
         return images;
     },
     getInitialState: function () {
-        return {images: []};
+        return {images: [], selectedImage: ''};
     },
     componentDidMount: function () {
         // When Component loads
@@ -103,7 +80,7 @@ var MainPage = React.createClass({
     render: function () {
         return (
             <div className="main-page">
-                <ThumbList images={this.state.images}/>
+                <ThumbList images={this.state.images} updateCropper={this.updateCropper}/>
                 <Cropper />
             </div>
         );
