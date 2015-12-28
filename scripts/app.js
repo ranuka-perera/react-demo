@@ -2,36 +2,41 @@ var ThumbImage = React.createClass({
     generateThumbnail: function (url, dimensions, targetWidth, callback) {
         // Based on https://stackoverflow.com/a/7557690 & https://stackoverflow.com/a/6005211
         var canvas = document.createElement("canvas");
-        var img = new Image();
-        img.crossOrigin = 'anonymous';
+        var img = $('img[src="'+url+'"]')[0];
+
         var tempScale = targetWidth / dimensions.width;
 
         canvas.width = dimensions.width * tempScale;
         canvas.height = dimensions.height * tempScale;
         var ctx = canvas.getContext("2d");
-        img.onload = function () {
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            var thumbUrl = canvas.toDataURL("image/png");
-            if (callback) {
-                callback(thumbUrl);
-            }
-        };
-        img.src = url;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        var thumbUrl = canvas.toDataURL("image/png");
+        if (callback) {
+            callback(thumbUrl);
+        }
+    },
+    recreateThumb: function(e) {
+        if (this.state.initialRender) {
+            this.generateThumbnail(this.props.url, this.props.dimensions, 300, function (thumbUrl) {
+                this.setState({url: thumbUrl});
+                this.setState({initialRender: false});
+            });
+        }
     },
     getInitialState: function () {
-        return {url: ''};
+        return {url: '', initialRender: true};
     },
     componentDidMount: function () {
-        this.generateThumbnail(this.props.url, this.props.dimensions, 300, function (thumbUrl) {
-            this.setState({url: thumbUrl});
-        });
+        this.setState({url: this.props.url});
     },
     render: function () {
-        return (
+        var returnval = (
             <li className="thumb">
-                <img src={this.state.url} alt={this.props.altText} className="thumb-image"/>
+                <img src={this.state.url} alt={this.props.altText} className="thumb-image"
+                     onLoad={this.recreateThumb}/>
             </li>
         );
+        return returnval;
     }
 });
 
