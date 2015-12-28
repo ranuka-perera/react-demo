@@ -3,13 +3,12 @@ var ThumbImage = React.createClass({
         this.props.updateCropper(this.props.url);
     },
     render: function () {
-        var returnval = (
+        return (
             <li className="thumb">
                 <img src={this.props.url} alt={this.props.altText} className="thumb-image"
                      onClick={this.clickImage}/>
             </li>
         );
-        return returnval;
     }
 });
 
@@ -31,22 +30,47 @@ var ThumbList = React.createClass({
     }
 });
 var CropperImage = React.createClass({
+    getInitialState: function () {
+        return {initialRenderComplete:false};
+    },
+    componentDidUpdate: function () {
+        if (this.props.src && !this.state.initialRenderComplete) {
+            $(function () {
+                $('#cropper-image').cropper({
+                    viewMode: 1,
+                    dragMode: 'move',
+                    autoCropArea: 3.61,
+                    restore: false,
+                    guides: false,
+                    highlight: false,
+                    cropBoxMovable: false,
+                    cropBoxResizable: false
+                });
+            });
+            self.setState({initialRenderComplete: true});
+        }
+
+    },
     render: function () {
-        return <div></div>;
+        return (
+            <img id="cropper-image" src={this.props.src}/>
+        );
     }
 });
 
 var Cropper = React.createClass({
     render: function () {
         return (
-            <div className="cropper-area"></div>
+            <div className="cropper-area">
+                <CropperImage src={this.props.url} />
+            </div>
         );
     }
 });
 
 var MainPage = React.createClass({
     updateCropper: function (imageUrl) {
-        this.setState(imageUrl);
+        this.setState({selectedImage: imageUrl});
     },
     // Return the image array.
     parseData: function (jsonData) {
@@ -61,7 +85,7 @@ var MainPage = React.createClass({
     getInitialState: function () {
         return {images: [], selectedImage: ''};
     },
-    componentDidMount: function () {
+    componentWillMount: function () {
         // When Component loads
         $.ajax({
             url: this.props.url,
@@ -70,7 +94,8 @@ var MainPage = React.createClass({
             jsonp: 'jsoncallback',
             type: 'GET',
             success: function (data) {
-                this.setState({images: this.parseData(data)});
+                var imagedata = this.parseData(data);
+                this.setState({images: imagedata, selectedImage: imagedata[0].path});
             }.bind(this),
             error: function () {
                 alert("Data failed to load");
@@ -81,7 +106,7 @@ var MainPage = React.createClass({
         return (
             <div className="main-page">
                 <ThumbList images={this.state.images} updateCropper={this.updateCropper}/>
-                <Cropper />
+                <Cropper url={this.state.selectedImage}/>
             </div>
         );
     }
