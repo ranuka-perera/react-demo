@@ -3,6 +3,7 @@ var ThumbImage = React.createClass({
         this.props.updateCropper(this.props.url);
     },
     render: function () {
+        // Using crossOrigin="anonymous" stops the image from even loading.
         return (
             <li className="thumb">
                 <img src={this.props.url} alt={this.props.altText} className="thumb-image"
