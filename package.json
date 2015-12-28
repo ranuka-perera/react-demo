@@ -1,0 +1,20 @@
+{
+  "name": "react-demo",
+  "version": "1.0.0",
+  "description": "Testing out React",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ranuka-perera/react-demo.git"
+  },
+  "author": "Ranuka Perera",
+  "license": "ISC",
+  "devDependencies": {
+    "bower": "^1.7.1",
+    "gulp": "^3.9.0",
+    "gulp-gh-pages": "^0.5.4"
+  }
+}

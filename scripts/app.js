@@ -47,7 +47,7 @@ var CropperImage = React.createClass({
                     cropBoxResizable: false
                 });
             });
-            self.setState({initialRenderComplete: true});
+            this.setState({initialRenderComplete: true});
         }
 
     },
