@@ -1,0 +1,31 @@
+body {
+    box-sizing: border-box;
+}
+#content {
+    width: 100%
+}
+.main-page {
+    width: 100%;
+    display: flex;
+    margin: 0;
+    flex-direction: row;
+}
+.thumb-list {
+    /* width: 12%;  For small screens? */
+    width: 22%; /* 720p screens*/
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    padding: 0;
+    /*will-change: transform;*/
+}
+.thumb {
+    padding: 15px;
+}
+.thumb-image {
+    width: 100%;
+}
+.cropper-area {
+    width: 88%;
+    position:fixed;
+}

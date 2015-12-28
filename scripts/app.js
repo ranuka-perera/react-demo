@@ -18,7 +18,7 @@ var ThumbList = React.createClass({
             );
         });
         return (
-            <ul className="thumbList">
+            <ul className="thumb-list">
                 {thumbs}
             </ul>
         );
@@ -28,7 +28,7 @@ var ThumbList = React.createClass({
 var Cropper = React.createClass({
     render: function () {
         return (
-            <div></div>
+            <div className="cropper-area"></div>
         );
     }
 });
